@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: store
+  datasource:
+    url: jdbc:mysql://localhost:3306/lbms
+    username: root
+    password: redame0010
+  jpa:
+    show-sql: true
+  jwt:
+    secret: ${JWT_SECRET}
+    accessTokenExpiration: 7200 # 2h
+    refreshTokenExpiration: 604800 # 7d
