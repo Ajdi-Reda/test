@@ -132,7 +132,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>10.15.0</version>
                 <configuration>
-                    <url>jdbc:mysql://localhost:3306/lbms
+                    <url>jdbc:mysql://windev.mysql.database.azure.com:3306/lbms
                     </url>
                     <user>root</user>
                     <password>redame0010</password>
