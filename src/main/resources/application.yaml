@@ -1,10 +1,15 @@
+server:
+  address: 0.0.0.0
+  port: 8080
+  ssl:
+    enabled: false
 spring:
   application:
     name: store
   datasource:
-    url: jdbc:mysql://localhost:3306/lbms
-    username: root
-    password: redame0010
+    url: jdbc:mysql://windev.mysql.database.azure.com:3306/lbms
+    username: reda
+    password: redame0010@
   jpa:
     show-sql: true
   jwt:
