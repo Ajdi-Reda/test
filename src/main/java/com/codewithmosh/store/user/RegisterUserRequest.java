@@ -1,8 +1,6 @@
 package com.codewithmosh.store.user;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.util.Set;
@@ -21,5 +19,8 @@ public class RegisterUserRequest {
     @Size(min = 6, max = 25, message = "Password must be between 6 to 25 characters long.")
     private String password;
 
-    private Set<Integer> roleIds;
+
+
+    @NotEmpty(message = "At least one role must be selected")
+    private Set<@NotNull(message = "Role ID cannot be null") Integer> roleIds;
 }
