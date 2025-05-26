@@ -7,7 +7,7 @@ CREATE TABLE Equipment (
                            status ENUM('NEW', 'DAMAGED', 'USED' , 'RETIRED')
 );
 
-CREATE TABLE EquipmentLoans (
+CREATE TABLE EquipmentLoan (
                                 id INT PRIMARY KEY AUTO_INCREMENT,
                                 equipment_id INT,
                                 user_id INT,
@@ -29,11 +29,11 @@ CREATE TABLE EquipmentLoans (
 CREATE TABLE EquipmentHistory (
                                   id INT PRIMARY KEY AUTO_INCREMENT,
                                   equipment_id INT,
-                                  event_type ENUM('maintenance', 'repair', 'assignment'),
+                                  event_type ENUM('NEW', 'DAMAGED', 'USED' , 'RETIRED'),
                                   event_date DATETIME,
                                   related_loan_id INT,
                                   performed_by INT,
                                   FOREIGN KEY (equipment_id) REFERENCES Equipment(id),
-                                  FOREIGN KEY (related_loan_id) REFERENCES EquipmentLoans(id),
+                                  FOREIGN KEY (related_loan_id) REFERENCES EquipmentLoan(id),
                                   FOREIGN KEY (performed_by) REFERENCES Users(id)
 );
