@@ -1,5 +1,6 @@
 package com.codewithmosh.store.equipments;
 
+import com.codewithmosh.store.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
@@ -62,6 +63,7 @@ public class EquipmentLoanService {
         return equipmentLoanMapper.toDto(loan);
     }
 
+
     public void returnEquipment(Integer id, Integer returnedToId) {
         var loan = equipmentLoanRepository.findById(id)
                 .orElseThrow(() -> new EquipmentLoanNotFoundException());
@@ -72,8 +74,16 @@ public class EquipmentLoanService {
 
         loan.setReturned(true);
         loan.setActualReturnDate(Instant.now());
-        loan.getReturnedTo().setId(returnedToId);
-        
+
+        // Create a new User object if returnedTo is null
+        if (loan.getReturnedTo() == null) {
+            User returnedTo = new User();
+            returnedTo.setId(returnedToId);
+            loan.setReturnedTo(returnedTo);
+        } else {
+            loan.getReturnedTo().setId(returnedToId);
+        }
+
         equipmentLoanRepository.save(loan);
     }
 

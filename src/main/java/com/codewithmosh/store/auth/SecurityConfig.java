@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers( "/products/**").permitAll()
                         .requestMatchers( "/auth/login").permitAll()
                         .requestMatchers( "/equipments/**").permitAll()
+                        .requestMatchers( "/equipment-loans/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
