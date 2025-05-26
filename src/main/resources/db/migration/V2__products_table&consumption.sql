@@ -1,7 +1,7 @@
 CREATE TABLE chemical_products (
-                                  id INT PRIMARY KEY,
+                                  id INT PRIMARY KEY AUTO_INCREMENT,
                                   name TEXT,
-                                  nomenclature TEXT,
+                                  nomenclature TEXT UNIQUE,
                                   current_stock FLOAT,
                                   minimum_stock FLOAT,
                                   unit TEXT,
@@ -11,7 +11,7 @@ CREATE TABLE chemical_products (
 );
 
 CREATE TABLE chemical_usage (
-                               id INT PRIMARY KEY,
+                               id INT PRIMARY KEY AUTO_INCREMENT,
                                product_id INT,
                                taken_by INT,
                                amount FLOAT,
