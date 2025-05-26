@@ -1,4 +1,4 @@
-package com.codewithmosh.store.product;
+package com.codewithmosh.store.product.item;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,6 +47,9 @@ public class ProductService {
     public void deleteProduct(Integer id) {
         var product = productRepository.findById(id).orElse(null);
 
+        if (product == null) {
+            throw new ProductNotFoundExceptionException();
+        }
         productRepository.deleteById(id);
     }
 }

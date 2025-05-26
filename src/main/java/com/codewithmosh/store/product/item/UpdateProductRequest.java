@@ -1,4 +1,4 @@
-package com.codewithmosh.store.product;
+package com.codewithmosh.store.product.item;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

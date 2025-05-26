@@ -27,7 +27,7 @@
         <url/>
     </scm>
     <properties>
-        <java.version>23</java.version>
+        <java.version>21</java.version>
     </properties>
     <dependencies>
         <dependency>
@@ -134,8 +134,8 @@
                 <configuration>
                     <url>jdbc:mysql://windev.mysql.database.azure.com:3306/lbms
                     </url>
-                    <user>root</user>
-                    <password>redame0010</password>
+                    <user>reda</user>
+                    <password>redame0010@</password>
                     <cleanDisabled>false</cleanDisabled>
                 </configuration>
             </plugin>

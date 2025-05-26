@@ -1,6 +1,6 @@
 package com.codewithmosh.store.user;
 
-import com.codewithmosh.store.product.ChemicalUsage;
+import com.codewithmosh.store.product.usage.ChemicalUsage;
 import com.codewithmosh.store.role.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

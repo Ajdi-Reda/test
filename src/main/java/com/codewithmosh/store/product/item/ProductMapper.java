@@ -1,4 +1,4 @@
-package com.codewithmosh.store.product;
+package com.codewithmosh.store.product.item;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

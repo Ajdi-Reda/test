@@ -1,7 +1,7 @@
 CREATE TABLE chemical_products (
                                   id INT PRIMARY KEY AUTO_INCREMENT,
                                   name TEXT,
-                                  nomenclature TEXT UNIQUE,
+                                  nomenclature VARCHAR(255) UNIQUE,
                                   current_stock FLOAT,
                                   minimum_stock FLOAT,
                                   unit TEXT,
