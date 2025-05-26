@@ -1,5 +1,6 @@
-package com.codewithmosh.store.product;
+package com.codewithmosh.store.product.usage;
 
+import com.codewithmosh.store.product.item.ChemicalProduct;
 import com.codewithmosh.store.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -15,7 +16,8 @@ import java.time.LocalDate;
 @Table(name = "chemical_usage")
 public class ChemicalUsage {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,10 +38,9 @@ public class ChemicalUsage {
     @Column(name = "purpose")
     private String purpose;
 
-    @ColumnDefault("'REQUESTED'")
     @Lob
     @Column(name = "status")
-    private String status;
+    private String status = "REQUESTED";
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "handled_by", referencedColumnName = "id")

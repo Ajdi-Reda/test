@@ -1,8 +1,9 @@
-package com.codewithmosh.store.product;
+package com.codewithmosh.store.product.item;
 
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -44,6 +45,7 @@ public class ProductController {
         return ResponseEntity.ok(productDto);
     }
 
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
         productService.deleteProduct(id);
 
@@ -52,6 +54,11 @@ public class ProductController {
 
     @ExceptionHandler(ProductAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> handleProductAlreadyExistsException(ProductAlreadyExistsException exception) {
-        return ResponseEntity.badRequest().body(Map.of("error", "product already exists"));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "product already exists"));
+    }
+
+    @ExceptionHandler(ProductNotFoundExceptionException.class)
+    public ResponseEntity<Map<String, String>> handleProductNotFoundException(ProductNotFoundExceptionException exception) {
+        return ResponseEntity.badRequest().body(Map.of("error", "product not found"));
     }
 }

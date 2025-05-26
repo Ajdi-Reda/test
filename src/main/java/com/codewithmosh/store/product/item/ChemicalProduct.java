@@ -1,5 +1,6 @@
-package com.codewithmosh.store.product;
+package com.codewithmosh.store.product.item;
 
+import com.codewithmosh.store.product.usage.ChemicalUsage;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import java.util.Set;
 public class ChemicalProduct {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "name")
