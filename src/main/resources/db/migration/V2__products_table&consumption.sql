@@ -20,7 +20,7 @@ CREATE TABLE chemical_usage (
                                status ENUM('REQUESTED', 'FULFILLED', 'REJECTED') DEFAULT 'REQUESTED',
                                handled_by INT NULL,
                                handled_at TIMESTAMP NULL,
-                               FOREIGN KEY (product_id) REFERENCES chemical_products(id),
+                               FOREIGN KEY (product_id) REFERENCES chemical_products(id) ON DELETE CASCADE ,
                                FOREIGN KEY (taken_by) REFERENCES users(id),
                                FOREIGN KEY (handled_by) REFERENCES users(id)
 
@@ -38,7 +38,7 @@ CREATE TABLE consumption_history (
                                     handled_at TIMESTAMP,
                                     action_type TEXT NOT NULL,
                                     notes TEXT NOT NULL,
-                                    FOREIGN KEY (product_id) REFERENCES chemical_products(id),
+                                    FOREIGN KEY (product_id) REFERENCES chemical_products(id) ON DELETE CASCADE ,
                                     FOREIGN KEY (taken_by) REFERENCES users(id),
                                     FOREIGN KEY (handled_by) REFERENCES users(id)
 );
