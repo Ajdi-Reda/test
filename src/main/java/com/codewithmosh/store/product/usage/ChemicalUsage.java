@@ -5,7 +5,6 @@ import com.codewithmosh.store.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -47,6 +46,6 @@ public class ChemicalUsage {
     private User handledBy;
 
     @Column(name = "handled_at")
-    private Instant handledAt;
+    private Instant handledAt = Instant.now();
 
 }

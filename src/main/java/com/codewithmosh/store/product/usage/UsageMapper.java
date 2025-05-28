@@ -2,6 +2,7 @@ package com.codewithmosh.store.product.usage;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
@@ -13,5 +14,9 @@ public interface UsageMapper {
     })
     UsageDto toDto(ChemicalUsage usage);
     ChemicalUsage toEntity(CreateUsageRequest request);
-//    void update(UpdateUsageRequest request, @MappingTarget ChemicalUsage usage);
+
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "product", ignore = true)
+    @Mapping(target = "handledBy", ignore = true)
+    void update(UpdateUsageRequest request, @MappingTarget ChemicalUsage usage);
 }

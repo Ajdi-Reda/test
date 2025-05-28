@@ -11,6 +11,7 @@ import java.time.LocalDate;
 public class UsageDto {
         private Integer id;
         private Integer productId;
+        private Integer takenBy;
         private Float amount;
         private LocalDate date;
         private String purpose;

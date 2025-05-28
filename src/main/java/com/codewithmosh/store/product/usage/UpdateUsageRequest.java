@@ -3,7 +3,6 @@ package com.codewithmosh.store.product.usage;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
-import java.time.Instant;
 import java.time.LocalDate;
 
 @Data
@@ -26,8 +25,8 @@ public class UpdateUsageRequest {
     @NotBlank(message = "Purpose is required")
     private String purpose;
 
-    @NotBlank(message = "Status is required")
-    private String status;
+    @NotNull(message = "Status is required")
+    private Status status;
 
     private Integer handledBy;
 }

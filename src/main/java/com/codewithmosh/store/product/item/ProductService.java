@@ -1,5 +1,6 @@
 package com.codewithmosh.store.product.item;
 
+import com.codewithmosh.store.common.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,10 +35,7 @@ public class ProductService {
     }
 
     public ProductDto updateProduct(Integer id, UpdateProductRequest request) {
-        var product = productRepository.findById(id).orElse(null);
-        if (product == null) {
-            return null;
-        }
+        var product = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id, ChemicalProduct.class.getSimpleName()));
 
         productMapper.update(request, product);
         productRepository.save(product);
