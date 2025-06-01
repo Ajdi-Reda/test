@@ -15,12 +15,6 @@ public class RegisterUserRequest {
     @Email(message = "Email must be valid")
     private String email;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, max = 25, message = "Password must be between 6 to 25 characters long.")
-    private String password;
-
-
-
     @NotEmpty(message = "At least one role must be selected")
     private Set<@NotNull(message = "Role ID cannot be null") Integer> roleIds;
 }
