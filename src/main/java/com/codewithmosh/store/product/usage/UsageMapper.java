@@ -10,6 +10,7 @@ public interface UsageMapper {
 
     @Mappings({
             @Mapping(source = "product.id", target = "productId"),
+            @Mapping(source = "user.id", target = "takenBy"),
             @Mapping(source = "handledBy.id", target = "handledBy"),
     })
     UsageDto toDto(ChemicalUsage usage);

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public interface UserMapper {
     UserDto toDto(User user);
     User toEntity(RegisterUserRequest request);
+    User toEntity(CheckUserTokenRequest request);
     void update(UpdateUserRequest request, @MappingTarget User user);
 
     default Set<Role> mapRoleIdsToRoles(Set<Integer> roleIds, RoleRepository roleRepository) {

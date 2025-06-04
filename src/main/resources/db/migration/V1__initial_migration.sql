@@ -17,3 +17,5 @@ CREATE TABLE user_roles (
                            FOREIGN KEY (user_id) REFERENCES Users(id),
                            FOREIGN KEY (role_id) REFERENCES Roles(id)
 );
+
+alter table users add column first_login boolean default true

@@ -31,6 +31,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "first_login")
+    private boolean firstLogin = true;
+
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE

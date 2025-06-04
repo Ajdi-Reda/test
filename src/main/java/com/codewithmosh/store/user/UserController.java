@@ -39,6 +39,18 @@ public class UserController {
         return ResponseEntity.created(uri).body(userDto);
     }
 
+    @PostMapping("/token")
+    public ResponseEntity<?> checkToken(
+            @Valid @RequestBody CheckUserTokenRequest request,
+            UriComponentsBuilder uriBuilder) {
+
+        var valid = userService.checkToken(request);
+        if(valid) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateUser(
         @PathVariable(name = "id") Integer id,

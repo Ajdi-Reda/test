@@ -1,5 +1,10 @@
 package com.codewithmosh.store.user;
 
+import com.codewithmosh.store.common.PasswordGenerator;
+import com.codewithmosh.store.email.EmailSenderService;
+import com.codewithmosh.store.invitation.InvalidTokenException;
+import com.codewithmosh.store.invitation.InvitationTokenRepository;
+import com.codewithmosh.store.invitation.InvitationTokenService;
 import com.codewithmosh.store.role.Role;
 import com.codewithmosh.store.role.RoleNotFoundExceptionException;
 import com.codewithmosh.store.role.RoleRepository;
@@ -26,6 +31,9 @@ public class UserService implements UserDetailsService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder; // Will be injected from ApplicationConfig
     private final RoleRepository roleRepository;
+    private InvitationTokenService invitationTokenService;
+    private EmailSenderService emailSenderService;
+    private InvitationTokenRepository invitationTokenRepository;
 
     public Iterable<UserDto> getAllUsers(
             @RequestParam(required = false, defaultValue = "", name = "sort") String sortBy
@@ -54,7 +62,7 @@ public class UserService implements UserDetailsService {
         }
 
         var user = userMapper.toEntity(request);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(PasswordGenerator.generatePassword(10)));
 
 
         Set<Role> roles = new HashSet<>();
@@ -65,6 +73,29 @@ public class UserService implements UserDetailsService {
         user.setRoles(roles);
         userRepository.save(user);
 
+        String token = invitationTokenService.createInvitationToken(user);
+        String body = String.format("""
+Hello %s,
+
+You have been invited to join our Laboratory Management System.
+
+To complete your registration:
+
+1. Open the Laboratory Management desktop application.
+2. Go to the registration page.
+3. Enter your email address: %s
+4. Enter the following invitation token: %s
+
+This platform will allow you to manage experiments, schedule lab usage, track inventory, and collaborate with your colleagues efficiently.
+
+If you did not expect this invitation or have any questions, please contact your lab administrator or our support team.
+
+Thank you,
+Lab Admin Team
+""", user.getName(), user.getEmail(), token);
+
+
+        emailSenderService.sendEmail(user.getEmail(), "Register you account", body);
         return userMapper.toDto(user);
     }
 
@@ -83,6 +114,18 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
 
         return userMapper.toDto(user);
+    }
+
+    public Boolean checkToken(CheckUserTokenRequest request) {
+        var user = userRepository.findByEmail(request.getEmail()).orElseThrow(UserNotFoundException::new);
+
+        var userWithToken = invitationTokenRepository.findByToken(request.getToken()).orElseThrow(InvalidTokenException::new);
+
+        if(!userWithToken.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("Invalid token or user");
+        }
+
+        return true;
     }
 
     public void delete(Integer id) {
