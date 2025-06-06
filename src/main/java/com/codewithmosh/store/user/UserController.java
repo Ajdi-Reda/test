@@ -40,15 +40,18 @@ public class UserController {
     }
 
     @PostMapping("/token")
-    public ResponseEntity<?> checkToken(
+    public ResponseEntity<Map<String, String>> checkToken(
             @Valid @RequestBody CheckUserTokenRequest request,
             UriComponentsBuilder uriBuilder) {
 
-        var valid = userService.checkToken(request);
-        if(valid) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().build();
+        var email = userService.checkToken(request);
+        return ResponseEntity.ok(Map.of("email", email));
+    }
+
+    @PutMapping("/register")
+    public ResponseEntity<Void> registerEmployeeWithToken(@RequestBody @Valid RegisterUserByTokenRequest request) {
+        userService.registerEmployeeByToken(request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{id}")

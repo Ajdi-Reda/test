@@ -1,9 +1,6 @@
 package com.codewithmosh.store.auth;
 
-import com.codewithmosh.store.user.LoginRequest;
-import com.codewithmosh.store.user.UserDto;
-import com.codewithmosh.store.user.UserMapper;
-import com.codewithmosh.store.user.UserRepository;
+import com.codewithmosh.store.user.*;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -11,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -23,11 +22,13 @@ public class AuthController {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AuthService authService;
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(
         @Valid @RequestBody LoginRequest request,
         HttpServletResponse response) {
+
         JwtResponse jwtResponse = authService.login(request, response);
         return ResponseEntity.ok(jwtResponse);
     }
