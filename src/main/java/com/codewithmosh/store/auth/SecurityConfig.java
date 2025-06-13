@@ -52,6 +52,13 @@ public class SecurityConfig {
                         .requestMatchers( "/auth/login").permitAll()
                         .requestMatchers( "/equipments/**").permitAll()
                         .requestMatchers( "/equipment-loans/**").permitAll()
+                        .requestMatchers( "/labs/**").permitAll()
+                        .requestMatchers( "/subjects/**").permitAll()
+                        .requestMatchers( "/groups/**").permitAll()
+                        .requestMatchers( "/students-group/**").permitAll()
+                        .requestMatchers( "/sessions/**").permitAll()
+                        .requestMatchers( "/session-chemicals/**").permitAll()
+                        .requestMatchers( "/session-equipments/**").permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",

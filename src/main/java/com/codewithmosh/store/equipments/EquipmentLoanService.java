@@ -29,7 +29,7 @@ public class EquipmentLoanService {
 
     public EquipmentLoanDto createEquipmentLoan(CreateEquipmentLoanRequest request) {
         // Check if equipment exists
-        var equipment = equipmentRepository.findById(request.getEquipmentId())
+        equipmentRepository.findById(request.getEquipmentId())
                 .orElseThrow(() -> new EquipmentNotFoundException());
 
         // Check if equipment is already on loan
@@ -52,7 +52,7 @@ public class EquipmentLoanService {
 
     public EquipmentLoanDto updateEquipmentLoan(Integer id, UpdateEquipmentLoanRequest request) {
         var loan = equipmentLoanRepository.findById(id)
-                .orElseThrow(() -> new EquipmentLoanNotFoundException());
+                .orElseThrow(EquipmentLoanNotFoundException::new);
 
         if (request.getReservedTo() != null && request.getReservedTo().isBefore(loan.getReservedFrom())) {
             throw new InvalidLoanDateException("Reserved to date must be after reserved from date");
@@ -66,7 +66,7 @@ public class EquipmentLoanService {
 
     public void returnEquipment(Integer id, Integer returnedToId) {
         var loan = equipmentLoanRepository.findById(id)
-                .orElseThrow(() -> new EquipmentLoanNotFoundException());
+                .orElseThrow(EquipmentLoanNotFoundException::new);
 
         if (Boolean.TRUE.equals(loan.getReturned())) {
             throw new IllegalStateException("Equipment is already returned");

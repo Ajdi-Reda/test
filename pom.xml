@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -8,11 +7,11 @@
         <version>3.4.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.windev</groupId>
-    <artifactId>store</artifactId>
+    <groupId>com.reda</groupId>
+    <artifactId>rhapi</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>store</name>
-    <description>store</description>
+    <name>rhapi</name>
+    <description>rhapi</description>
     <url/>
     <licenses>
         <license/>
@@ -27,12 +26,27 @@
         <url/>
     </scm>
     <properties>
-        <java.version>21</java.version>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok-mapstruct-binding</artifactId>
+            <version>0.2.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -66,14 +80,11 @@
             <groupId>org.flywaydb</groupId>
         </dependency>
         <dependency>
-            <artifactId>lombok</artifactId>
             <groupId>org.projectlombok</groupId>
-            <scope>annotationProcessor</scope>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
-        <dependency>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-            <groupId>org.springframework.boot</groupId>
-        </dependency>
+
         <dependency>
             <artifactId>mapstruct-processor</artifactId>
             <groupId>org.mapstruct</groupId>
@@ -82,7 +93,7 @@
         <dependency>
             <artifactId>mapstruct</artifactId>
             <groupId>org.mapstruct</groupId>
-            <version>1.6.2</version>
+            <version>1.6.3</version>
         </dependency>
         <dependency>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -114,7 +125,7 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
-            <version>0.12.5</version>
+            <version>0.12.6</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -128,6 +139,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
@@ -135,6 +151,24 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>1.6.3</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
@@ -145,6 +179,44 @@
                     <user>reda</user>
                     <password>redame0010@</password>
                     <cleanDisabled>false</cleanDisabled>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.microsoft.azure</groupId>
+                <artifactId>azure-webapp-maven-plugin</artifactId>
+                <version>2.13.0</version>
+                <configuration>
+                    <schemaVersion>v2</schemaVersion>
+                    <resourceGroup>windev</resourceGroup>
+                    <appName>lbms</appName>
+                    <pricingTier>B1</pricingTier>
+                    <region>centralus</region>
+                    <appSettings>
+                        <property>
+                            <name>JAVA_OPTS</name>
+                            <value>-Dserver.port=80</value>
+                        </property>
+                        <property>
+                            <name>spring.jwt.secret</name>
+                            <value>9b09ed7732559dae46f41ac9d916368affea80eab378659ba5c4c69b69739a83bac504057ac747c4e8134537410252a3a63a3e8f16ff92ea6544aae98806d7ecfd9a5777fdbe9251f448e414de80844bbd03f68c1b5cb0b779f1b98905a3a0fb7e0d27d42d2b7945422712fe7de72685a82b2d9624509bd5bcfc105eb968a762a1d1e3e6746c09252b72cb1da7f3af85179b9000672861544dabf0b67491bdf54e4b82902ec705b91081f8e78f512fd9f6eb3299e6bad3511b7256387a281f902882781d7fa23841636ec16b79f2ce79539de64261bee962d615fa4fcf0a0851cb15801a0848a91d1ff2034fb1ed501d44c8bd0612ae8f742871edffd90c2d021a5bafd2c39465045ee12b3aab664b348adb174ddb1faff24b27d9844bbfa6c5065193e0fcfd9ca566e6c640ac27cd5bffa2ac80b4a1f44999f8e542a5dccba05130c7f0e48247078c67552e44a446f1ab0dd9cfd324ae5be1e2d555db7e5fcfd01085849fe24553650efcaeb0ae9e23bda37e5893996f72156abe57b774471fd7be6708b018d3bc693f05fef5276cb32fee4014e566af32e70b2a5656e5eaa75cd9256fd5bf8a9f20a23765711bdb9e190657f53bb2b4bb67fee54d1911b16de25e2dd214baba1f454826ce25f1a0f3889a4d1f3782cd0d4d49a780d333c37ad1202146251a81dfa0b7a18b46104360c121029c4d43674de022559b2703add4</value>
+                        </property>
+                    </appSettings>
+                    <runtime>
+                        <os>Linux</os>
+                        <javaVersion>Java 17</javaVersion>
+                        <webContainer>Java SE</webContainer>
+                    </runtime>
+                    <deployment>
+                        <resources>
+                            <resource>
+                                <directory>${project.basedir}/target</directory>
+                                <includes>
+                                    <include>*.jar</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                    </deployment>
                 </configuration>
             </plugin>
 

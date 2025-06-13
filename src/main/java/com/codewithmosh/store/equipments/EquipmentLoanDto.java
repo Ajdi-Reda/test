@@ -18,4 +18,5 @@ public class EquipmentLoanDto {
     private Instant actualReturnDate;
     private Integer checkoutById;
     private Integer returnedToId;
+    private Integer sessionId;
 }
