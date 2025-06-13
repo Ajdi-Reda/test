@@ -1,5 +1,6 @@
 package com.codewithmosh.store.user;
 
+import com.codewithmosh.store.invitation.InvalidTokenException;
 import com.codewithmosh.store.role.RoleNotFoundExceptionException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -39,15 +40,6 @@ public class UserController {
         return ResponseEntity.created(uri).body(userDto);
     }
 
-    @PostMapping("/token")
-    public ResponseEntity<Map<String, String>> checkToken(
-            @Valid @RequestBody CheckUserTokenRequest request,
-            UriComponentsBuilder uriBuilder) {
-
-        var email = userService.checkToken(request);
-        return ResponseEntity.ok(Map.of("email", email));
-    }
-
     @PutMapping("/register")
     public ResponseEntity<Void> registerEmployeeWithToken(@RequestBody @Valid RegisterUserByTokenRequest request) {
         userService.registerEmployeeByToken(request);
@@ -80,16 +72,26 @@ public class UserController {
 
     @ExceptionHandler(RoleNotFoundExceptionException.class)
     public ResponseEntity<Map<String, String>> handleRoleNotFoundException() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Role not found"));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Role not found"));
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> handleUserAlreadyExistsException() {
-        return ResponseEntity.badRequest().body(Map.of("error", "User already exists"));
+        return ResponseEntity.badRequest().body(Map.of("message", "User already exists"));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Void> handleAccessDenied() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidTokenException(InvalidTokenException e) {
+        return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+    }
+
+    @ExceptionHandler(PasswordsNotMatchException.class)
+    public ResponseEntity<Map<String, String>> handlePasswordsNotMatchException() {
+        return ResponseEntity.badRequest().body(Map.of("message", "Passwords do not match"));
     }
 }

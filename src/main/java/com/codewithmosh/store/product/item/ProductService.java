@@ -35,7 +35,7 @@ public class ProductService {
     }
 
     public ProductDto updateProduct(Integer id, UpdateProductRequest request) {
-        var product = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id, ChemicalProduct.class.getSimpleName()));
+        var product = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
         productMapper.update(request, product);
         productRepository.save(product);

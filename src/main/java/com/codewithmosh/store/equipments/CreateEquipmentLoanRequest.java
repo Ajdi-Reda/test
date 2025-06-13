@@ -12,5 +12,6 @@ public class CreateEquipmentLoanRequest {
     private String signature;
     private Instant expectedReturnDate;
     private Integer checkoutById;
+    private Integer sessionId;
 }
 

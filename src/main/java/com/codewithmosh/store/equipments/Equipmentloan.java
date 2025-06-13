@@ -1,7 +1,9 @@
 package com.codewithmosh.store.equipments;
 
+import com.codewithmosh.store.session.LabSession;
 import com.codewithmosh.store.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,5 +54,10 @@ public class Equipmentloan {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "returned_to")
     private User returnedTo;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "session_id", nullable = false)
+    private LabSession session;
 
 }

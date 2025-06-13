@@ -25,7 +25,7 @@ public class EquipmentService {
     }
 
     public EquipmentDto createEquipment(CreateEquipmentRequest request) {
-        if(EquipmentRepository.existsByBarcode(request.getBarcode())) {
+        if(Boolean.TRUE.equals(EquipmentRepository.existsByBarcode(request.getBarcode()))) {
             throw new EquipmentAlreadyExistsException();
         }
 

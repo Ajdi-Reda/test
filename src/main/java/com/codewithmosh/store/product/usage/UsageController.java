@@ -1,7 +1,6 @@
 package com.codewithmosh.store.product.usage;
 
 import com.codewithmosh.store.product.item.ProductNotFoundExceptionException;
-import com.codewithmosh.store.user.UserNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,11 +32,6 @@ public class UsageController {
     public ResponseEntity<UsageDto> update(@PathVariable Integer id, @RequestBody @Valid UpdateUsageRequest request) {
         var usageDto = usageService.updateUsage(id, request);
         return ResponseEntity.ok(usageDto);
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleUserNotFoundException(UserNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
     }
 
     @ExceptionHandler(ProductNotFoundExceptionException.class)

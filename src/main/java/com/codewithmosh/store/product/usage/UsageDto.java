@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Data
 public class UsageDto {
         private Integer id;
+        private Integer sessionId;
         private Integer productId;
         private Integer takenBy;
         private Float amount;

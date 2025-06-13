@@ -1,5 +1,6 @@
 package com.codewithmosh.store.user;
 
+import com.codewithmosh.store.common.EntityNotFoundException;
 import com.codewithmosh.store.common.PasswordGenerator;
 import com.codewithmosh.store.email.EmailSenderService;
 import com.codewithmosh.store.invitation.InvalidTokenException;
@@ -8,7 +9,6 @@ import com.codewithmosh.store.invitation.InvitationTokenService;
 import com.codewithmosh.store.role.Role;
 import com.codewithmosh.store.role.RoleNotFoundExceptionException;
 import com.codewithmosh.store.role.RoleRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -52,7 +52,7 @@ public class UserService implements UserDetailsService {
     public UserDto getUser(@PathVariable Integer id) {
         var user = userRepository.findById(id).orElse(null);
         if (user == null) {
-            throw new UserNotFoundException();
+            throw new EntityNotFoundException("User not found");
         }
 
         return userMapper.toDto(user);
@@ -104,7 +104,7 @@ Lab Admin Team
     public UserDto update(Integer id, UpdateUserRequest request) {
         var user = userRepository.findById(id).orElse(null);
         if (user == null) {
-            throw new UserNotFoundException();
+            throw new EntityNotFoundException("User not found");
         }
 
         userMapper.update(request, user);
@@ -118,20 +118,22 @@ Lab Admin Team
         return userMapper.toDto(user);
     }
 
-    public String checkToken(CheckUserTokenRequest request) {
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow(UserNotFoundException::new);
+    public Boolean checkToken(String email, String token) {
+        var user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        var userWithToken = invitationTokenRepository.findByToken(request.getToken()).orElseThrow(InvalidTokenException::new);
+        var userWithToken = invitationTokenRepository.findByToken(token).orElseThrow(InvalidTokenException::new);
 
         if(!userWithToken.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("Invalid token or user");
         }
 
-        return user.getEmail();
+        return true;
     }
 
     @Transactional
     public void registerEmployeeByToken(RegisterUserByTokenRequest request) {
+        boolean isValid = checkToken(request.getEmail(), request.getToken());
+        if(isValid) {
         if(!request.getPassword().equals(request.getConfirmPassword()))
             throw new PasswordsNotMatchException();
 
@@ -141,12 +143,13 @@ Lab Admin Team
         userRepository.save(user);
 
         invitationTokenRepository.deleteByToken(request.getToken());
+        }
     }
 
     public void delete(Integer id) {
         var user = userRepository.findById(id).orElse(null);
         if (user == null) {
-            throw new UserNotFoundException();
+            throw new EntityNotFoundException("User not found");
         }
 
         userRepository.delete(user);
@@ -157,7 +160,7 @@ Lab Admin Team
             @RequestBody ChangePasswordRequest request) {
         var user = userRepository.findById(id).orElse(null);
         if (user == null) {
-            throw new UserNotFoundException();
+            throw new EntityNotFoundException("User not found");
         }
 
         if (!user.getPassword().equals(request.getOldPassword())) {

@@ -10,12 +10,14 @@ public interface EquipmentLoanMapper {
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "checkoutById", source = "checkoutBy.id")
     @Mapping(target = "returnedToId", source = "returnedTo.id")
+    @Mapping(target = "sessionId", source = "session.id")
     EquipmentLoanDto toDto(Equipmentloan loan);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "equipment.id", source = "equipmentId")
     @Mapping(target = "user.id", source = "userId")
     @Mapping(target = "checkoutBy.id", source = "checkoutById")
+    @Mapping(target = "session.id", source = "sessionId")
     @Mapping(target = "returned", constant = "false")
     @Mapping(target = "actualReturnDate", ignore = true)
     @Mapping(target = "returnedTo", ignore = true)
