@@ -58,7 +58,12 @@ public class SecurityConfig {
                         .requestMatchers( "/students-group/**").permitAll()
                         .requestMatchers( "/sessions/**").permitAll()
                         .requestMatchers( "/session-chemicals/**").permitAll()
-                        .requestMatchers( "/session-equipments  /**").permitAll()
+                        .requestMatchers( "/session-equipments/**").permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
