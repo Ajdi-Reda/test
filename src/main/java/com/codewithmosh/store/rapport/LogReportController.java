@@ -90,4 +90,49 @@ public class LogReportController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(pdfBytes);
     }
+    @GetMapping("/usage")
+    public List<OperationLogDTO> getReportUsage(
+            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end
+    ) {
+        return logReportService.getReportChemical(start, end);
+    }
+
+
+    @GetMapping("/usage/pdf")
+    public ResponseEntity<byte[]> getReportChemicalPdf(
+            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end
+    ) {
+        List<OperationLogDTO> logs = logReportService.getReportChemical(start, end);
+        byte[] pdfBytes = logReportService.generatePdfReport(logs);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=lab_chemical_report.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfBytes);
+    }
+
+    @GetMapping("/stock")
+    public List<OperationLogDTO> getReportStock(
+            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end
+    ) {
+        return logReportService.getReportStock(start, end);
+    }
+
+
+    @GetMapping("/stock/pdf")
+    public ResponseEntity<byte[]> getReportStockPdf(
+            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end
+    ) {
+        List<OperationLogDTO> logs = logReportService.getReportStock(start, end);
+        byte[] pdfBytes = logReportService.generatePdfReport(logs);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=lab_stock_report.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfBytes);
+    }
 }

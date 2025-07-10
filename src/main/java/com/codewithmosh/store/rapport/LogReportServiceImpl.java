@@ -2,6 +2,12 @@ package com.codewithmosh.store.rapport;
 
 import com.codewithmosh.store.equipments.EquipmentLoanRepository;
 import com.codewithmosh.store.equipments.Equipmentloan;
+import com.codewithmosh.store.product.item.ChemicalProduct;
+import com.codewithmosh.store.product.item.ProductRepository;
+import com.codewithmosh.store.product.stock.StockAlert;
+import com.codewithmosh.store.product.stock.StockAlertRepository;
+import com.codewithmosh.store.product.usage.ChemicalUsage;
+import com.codewithmosh.store.product.usage.UsageRepository;
 import com.codewithmosh.store.session.LabSession;
 import com.codewithmosh.store.session.LabSessionRepository;
 import com.codewithmosh.store.user.User;
@@ -27,11 +33,17 @@ public class LogReportServiceImpl implements LogReportService {
     private final LabSessionRepository labSessionRepository;
     private final UserRepository userRepository;
     private final EquipmentLoanRepository equipmentLoanRepository;
+    private final UsageRepository usageRepository;
+    private final StockAlertRepository stockAlertRepository;
+    private final ProductRepository productRepository;
 
-    public LogReportServiceImpl(LabSessionRepository labSessionRepository , UserRepository user , EquipmentLoanRepository equipmentLoanRepository) {
+    public LogReportServiceImpl(LabSessionRepository labSessionRepository , UserRepository user , EquipmentLoanRepository equipmentLoanRepository , UsageRepository usageRepository , StockAlertRepository  stockAlertRepository , ProductRepository  productRepository) {
         this.labSessionRepository = labSessionRepository;
         this.userRepository = user;
         this.equipmentLoanRepository = equipmentLoanRepository;
+        this.usageRepository = usageRepository;
+        this.stockAlertRepository = stockAlertRepository;
+        this.productRepository = productRepository;
     }
 
 
@@ -123,11 +135,73 @@ public class LogReportServiceImpl implements LogReportService {
             return dto;
         }).collect(Collectors.toList());
     }
-    public List<OperationLogDTO> getReportChemical(LocalDateTime start, LocalDateTime end){
-        return null;
+    public List<OperationLogDTO> getReportChemical(LocalDateTime start, LocalDateTime end) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        List<ChemicalUsage> usages = usageRepository.findByCreatedAtBetween(start, end);
+
+        return usages.stream().map(usage -> {
+            OperationLogDTO dto = new OperationLogDTO();
+            dto.setType("CHEMICAL_USAGE");
+
+            String productName = usage.getProduct() != null ? usage.getProduct().getName() : "Unknown Product";
+            String userName = usage.getTakenBy() != null ? usage.getTakenBy().getName() : "Unknown User";
+
+            String formattedDescription = "Chemical used: '" + productName + "', taken by " + userName +
+                    " | Amount: " + usage.getAmount() + " | Date: " + usage.getDate().format(dateFormatter);
+
+            dto.setDescription(formattedDescription);
+
+            dto.setTimestamp(usage.getCreatedAt().toInstant()
+                    .atZone(ZoneId.systemDefault()).toLocalDateTime());
+
+            dto.setPerformedBy(userName);
+
+            return dto;
+        }).collect(Collectors.toList());
     }
+
     public List<OperationLogDTO> getReportStock(LocalDateTime start, LocalDateTime end){
-        return null;
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        List<StockAlert> alerts = stockAlertRepository.findByCreatedAtBetween(start, end);
+
+        return alerts.stream().map(alert -> {
+            OperationLogDTO dto = new OperationLogDTO();
+            dto.setType("STOCK_ALERT");
+
+            // Resolve product name from itemId
+            String productName = productRepository.findById(alert.getItemId())
+                    .map(ChemicalProduct::getName)
+                    .orElse("Unknown Product");
+
+            // Resolved status
+            boolean isResolved = Boolean.TRUE.equals(alert.getResolved());
+            String resolvedBy = isResolved && alert.getResolvedBy() != null
+                    ? alert.getResolvedBy().getName()
+                    : "N/A";
+
+            // Build description
+            StringBuilder description = new StringBuilder();
+            description.append("Stock alert for product: '")
+                    .append(productName)
+                    .append("' | Resolved: ")
+                    .append(isResolved ? "true" : "false");
+
+            if (isResolved) {
+                description.append(" | Resolved by: ").append(resolvedBy);
+            }
+
+            dto.setDescription(description.toString());
+
+            dto.setTimestamp(alert.getCreatedAt().toInstant()
+                    .atZone(ZoneId.systemDefault()).toLocalDateTime());
+
+            dto.setPerformedBy(isResolved ? resolvedBy : "System");
+
+            return dto;
+        }).collect(Collectors.toList());
     }
 
 
