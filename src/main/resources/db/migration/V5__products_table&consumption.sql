@@ -7,7 +7,8 @@ CREATE TABLE chemical_products (
                                    unit VARCHAR(100) NOT NULL,
                                    expiration_date DATE,
                                    risk_category VARCHAR(30),
-                                   safety_data_sheet_uri TEXT
+                                   safety_data_sheet_uri TEXT,
+                                   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Chemical Usage Table
@@ -22,6 +23,7 @@ CREATE TABLE chemical_usage (
                                 status ENUM('REQUESTED', 'FULFILLED', 'REJECTED') DEFAULT 'REQUESTED',
                                 handled_by INT NULL,
                                 handled_at TIMESTAMP NULL,
+                                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                 FOREIGN KEY (session_id) REFERENCES lab_sessions(id),
                                 FOREIGN KEY (product_id) REFERENCES chemical_products(id) ON DELETE CASCADE,
                                 FOREIGN KEY (taken_by) REFERENCES users(id),
@@ -42,6 +44,7 @@ CREATE TABLE consumption_history (
                                      handled_at TIMESTAMP,
                                      action_type ENUM('INSERT', 'UPDATE', 'DELETE') NOT NULL,
                                      notes TEXT NOT NULL,
+                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                      FOREIGN KEY (session_id) REFERENCES lab_sessions(id),
                                      FOREIGN KEY (product_id) REFERENCES chemical_products(id) ON DELETE CASCADE,
                                      FOREIGN KEY (taken_by) REFERENCES users(id),

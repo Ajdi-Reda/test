@@ -4,6 +4,7 @@ CREATE TABLE equipment (
                            brand VARCHAR(255) NOT NULL,
                            model VARCHAR(255) NOT NULL,
                            purchase_date DATE NOT NULL,
+                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                            status ENUM('NEW', 'USED', 'DAMAGED', 'RETIRED') NOT NULL
 );
 
@@ -21,6 +22,7 @@ CREATE TABLE equipmentloans (
                                 actual_return_date DATETIME,
                                 checkout_by INT,
                                 returned_to INT,
+                                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                 FOREIGN KEY (session_id) REFERENCES lab_sessions(id),
                                 FOREIGN KEY (equipment_id) REFERENCES equipment(id),
                                 FOREIGN KEY (user_id) REFERENCES users(id),
@@ -37,6 +39,7 @@ CREATE TABLE equipment_history (
                                    event_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                    related_loan_id INT,
                                    performed_by INT,
+                                   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                    FOREIGN KEY (session_id) REFERENCES lab_sessions(id),
                                    FOREIGN KEY (equipment_id) REFERENCES equipment(id),
                                    FOREIGN KEY (related_loan_id) REFERENCES equipmentloans(id),

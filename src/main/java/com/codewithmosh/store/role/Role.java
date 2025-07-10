@@ -19,6 +19,15 @@ public class Role {
     @Column(name = "name", length = 30)
     private String name;
 
+    @Column(name = "created_at", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private java.util.Date createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new java.util.Date();
+    }
+
 //    @JsonIgnore
 //    @ManyToMany(mappedBy = "roles")
 //    private List<User> users = new ArrayList<>();

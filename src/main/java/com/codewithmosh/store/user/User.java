@@ -52,6 +52,15 @@ public class User {
         roles.add(role);
     }
 
+    @Column(name = "created_at", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private java.util.Date createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new java.util.Date();
+    }
+
 //    @OneToMany(mappedBy = "user")
 //    private Set<ChemicalUsage> usages;
 }

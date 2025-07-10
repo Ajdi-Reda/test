@@ -4,5 +4,6 @@ CREATE TABLE stock_alerts (
                             date DATE DEFAULT (CURRENT_DATE),
                             resolved BOOLEAN DEFAULT FALSE,
                             resolved_by INT,
+                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                             FOREIGN KEY (resolved_by) REFERENCES Users(id)
 );

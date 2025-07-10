@@ -21,4 +21,13 @@ public class Lab {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @Column(name = "created_at", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private java.util.Date createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new java.util.Date();
+    }
+
 }

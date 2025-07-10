@@ -57,4 +57,13 @@ public class LabSession {
     @OneToMany(mappedBy = "session")
     private Set<Equipmentloan> equipmentLoans = new LinkedHashSet<>();
 
+    @Column(name = "created_at", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private java.util.Date createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new java.util.Date();
+    }
+
 }

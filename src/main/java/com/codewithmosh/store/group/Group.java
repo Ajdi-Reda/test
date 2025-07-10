@@ -32,4 +32,13 @@ public class Group {
     @JoinColumn(name = "teacher_id")
     private User teacher;
 
+    @Column(name = "created_at", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private java.util.Date createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new java.util.Date();
+    }
+
 }

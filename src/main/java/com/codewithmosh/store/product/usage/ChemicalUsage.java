@@ -62,4 +62,13 @@ public class ChemicalUsage {
     @Column(name = "handled_at")
     private Instant handledAt;
 
+    @Column(name = "created_at", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private java.util.Date createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new java.util.Date();
+    }
+
 }

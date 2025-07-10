@@ -27,4 +27,14 @@ public class StudentsGroup {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+
+    @Column(name = "created_at", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private java.util.Date createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new java.util.Date();
+    }
+
 }
