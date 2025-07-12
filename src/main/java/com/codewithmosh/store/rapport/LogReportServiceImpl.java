@@ -14,12 +14,15 @@ import com.codewithmosh.store.user.User;
 import com.codewithmosh.store.user.UserRepository;
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
+import com.lowagie.text.Image;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.*;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -209,7 +212,41 @@ public class LogReportServiceImpl implements LogReportService {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             Document document = new Document(PageSize.A4, 40, 40, 50, 50); // add margins
             PdfWriter.getInstance(document, baos);
+
+            ClassLoader classLoader = getClass().getClassLoader();
+            URL imageUrl = classLoader.getResource("static/lastlast.png");
+
+            if (imageUrl == null) {
+                throw new FileNotFoundException("Logo image not found in classpath: static/logolast.png");
+            }
+
+            Image logo1 = Image.getInstance(imageUrl);
+
+            logo1.scaleAbsolute(150, 150);
+            logo1.setAlignment(Image.ALIGN_LEFT | Image.ALIGN_LEFT);
+
             document.open();
+            PdfPTable logoTable = new PdfPTable(1);
+            logoTable.setWidthPercentage(100);
+            logoTable.setHorizontalAlignment(Element.ALIGN_LEFT);
+
+            PdfPCell logoCell1 = new PdfPCell();
+            logoCell1.setBorder(Rectangle.NO_BORDER);
+            logoCell1.setHorizontalAlignment(Element.ALIGN_LEFT);
+            logoCell1.setVerticalAlignment(Element.ALIGN_LEFT);
+            logoCell1.setPadding(0f);
+            logoCell1.addElement(logo1);
+            logoTable.addCell(logoCell1);
+            logoTable.setSpacingAfter(20f);
+            document.add(logoTable);
+
+
+
+
+
+
+
+
 
             // Title font with white color for contrast
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 22, Color.WHITE);
@@ -226,6 +263,7 @@ public class LogReportServiceImpl implements LogReportService {
             titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
             titleCell.setBorder(Rectangle.NO_BORDER);
             titleTable.addCell(titleCell);
+            titleTable.setSpacingBefore(20f);
             document.add(titleTable);
             document.add(Chunk.NEWLINE); // space after title
 
@@ -281,7 +319,25 @@ public class LogReportServiceImpl implements LogReportService {
 
 
             document.add(table);
+
+
+
+// Add some space before the signature line
+            document.add(Chunk.NEWLINE);
+            document.add(Chunk.NEWLINE);
+
+// Create a paragraph for the signature line
+            Font signatureFont = FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 14, Color.BLACK);
+            Paragraph signature = new Paragraph("Signature de chef de departement : ", signatureFont);
+            Paragraph sign = new Paragraph("__________________________", signatureFont);
+            signature.setAlignment(Element.ALIGN_RIGHT);
+            sign.setAlignment(Element.ALIGN_RIGHT);
+            signature.setSpacingBefore(40f); // space from the table above
+
+            document.add(signature);
+            document.add(sign);
             document.close();
+
 
             return baos.toByteArray();
         } catch (Exception e) {

@@ -11,6 +11,11 @@ public class EquipmentService {
     private final EquipmentRepository EquipmentRepository;
     private final EquipmentMapper EquipmentMapper;
 
+
+    public long countNumberEquipments() {
+        return EquipmentRepository.count();
+    }
+
     public Iterable<EquipmentDto> getEquipments() {
         return EquipmentRepository.findAll().stream().map(EquipmentMapper::toDto).toList();
     }
