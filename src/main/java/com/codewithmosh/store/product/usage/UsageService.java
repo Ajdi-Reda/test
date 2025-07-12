@@ -21,6 +21,11 @@
         private final StockAlertRepository stockAlertRepository;
         private final LabSessionRepository labSessionRepository;
 
+
+        public long countNumberUsages() {
+            return usageRepository.count();
+        }
+
         public Iterable<UsageDto> getUsages() {
             return usageRepository.findAll()
                     .stream()

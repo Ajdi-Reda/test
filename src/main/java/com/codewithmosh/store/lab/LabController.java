@@ -26,4 +26,8 @@ public class LabController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    @GetMapping("/cnt")
+    public ResponseEntity<Long> getLabCount(){
+        return ResponseEntity.ok(labService.countNumberLabs());
+    }
 }

@@ -50,4 +50,7 @@ public class ProductService {
         }
         productRepository.deleteById(id);
     }
+    public long countNumberProducts() {
+        return productRepository.count();
+    }
 }

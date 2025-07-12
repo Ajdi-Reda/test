@@ -37,6 +37,10 @@ public class UserService implements UserDetailsService {
     private EmailSenderService emailSenderService;
     private InvitationTokenRepository invitationTokenRepository;
 
+    public long countNumberUsers() {
+        return userRepository.count();
+    }
+
     public Iterable<UserDto> getAllUsers(
             @RequestParam(required = false, defaultValue = "", name = "sort") String sortBy
     ) {

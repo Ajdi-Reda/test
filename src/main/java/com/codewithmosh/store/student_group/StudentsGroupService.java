@@ -19,6 +19,10 @@ public class StudentsGroupService {
     private final UserRepository userRepository;
     private final StudentsGroupMapper studentsGroupMapper;
 
+    public long countNumberStudentsGroups() {
+        return studentsGroupRepository.count();
+    }
+
     public List<StudentsGroupDto> findAll() {
         return studentsGroupRepository.findAll()
                 .stream()

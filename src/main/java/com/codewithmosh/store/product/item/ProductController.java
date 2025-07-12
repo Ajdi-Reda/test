@@ -61,4 +61,9 @@ public class ProductController {
     public ResponseEntity<Map<String, String>> handleProductNotFoundException(ProductNotFoundExceptionException exception) {
         return ResponseEntity.badRequest().body(Map.of("error", "product not found"));
     }
+
+    @GetMapping("/cnt")
+    public ResponseEntity<Long> getLabCount(){
+        return ResponseEntity.ok(productService.countNumberProducts());
+    }
 }

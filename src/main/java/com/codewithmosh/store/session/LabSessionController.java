@@ -15,6 +15,11 @@ public class LabSessionController {
 
     private final LabSessionService labSessionService;
 
+    @GetMapping("/cnt")
+    public ResponseEntity<Long> getLabCount(){
+        return ResponseEntity.ok(labSessionService.countNumberLabSessions());
+    }
+
     @GetMapping
     public ResponseEntity<List<LabSessionDto>> getAllSessions() {
         List<LabSessionDto> sessions = labSessionService.findAll();

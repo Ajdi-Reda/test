@@ -15,6 +15,11 @@ public class StudentsGroupController {
 
     private final StudentsGroupService studentsGroupService;
 
+    @GetMapping("/cnt")
+    public ResponseEntity<Long> getLabCount(){
+        return ResponseEntity.ok(studentsGroupService.countNumberStudentsGroups());
+    }
+
     @GetMapping
     public List<StudentsGroupDto> findAll() {
         return studentsGroupService.findAll();

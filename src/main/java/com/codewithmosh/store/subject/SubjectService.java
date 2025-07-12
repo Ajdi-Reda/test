@@ -25,4 +25,7 @@ public class SubjectService {
         return subjectRepository.findById(id)
                 .map(subjectMapper::toDto);
     }
+    public long countNumberSubjects() {
+        return subjectRepository.count();
+    }
 }

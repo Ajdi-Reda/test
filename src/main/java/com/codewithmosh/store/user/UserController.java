@@ -18,7 +18,12 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
 
-    @PreAuthorize("hasA('ROLE_ADMIN')")
+
+    @GetMapping("/cnt")
+    public ResponseEntity<Long> getLabCount(){
+        return ResponseEntity.ok(userService.countNumberUsers());
+    }
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public Iterable<UserDto> getAllUsers(
         @RequestParam(required = false, defaultValue = "", name = "sort") String sortBy

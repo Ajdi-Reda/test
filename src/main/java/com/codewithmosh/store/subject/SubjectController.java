@@ -11,6 +11,11 @@ public class SubjectController {
 
     private final SubjectService subjectService;
 
+    @GetMapping("/cnt")
+    public ResponseEntity<Long> getLabCount(){
+        return ResponseEntity.ok(subjectService.countNumberSubjects());
+    }
+
     public SubjectController(SubjectService subjectService) {
         this.subjectService = subjectService;
     }

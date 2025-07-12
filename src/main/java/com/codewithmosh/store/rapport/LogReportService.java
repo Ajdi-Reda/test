@@ -10,5 +10,4 @@ public interface LogReportService {
     public List<OperationLogDTO> getReportEquipment(LocalDateTime start, LocalDateTime end);
     public List<OperationLogDTO> getReportChemical(LocalDateTime start, LocalDateTime end);
     public List<OperationLogDTO> getReportStock(LocalDateTime start, LocalDateTime end);
-
 }

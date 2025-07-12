@@ -73,4 +73,8 @@ public class GroupService {
         group.setSubject(subject);
         group.setTeacher(teacher);
     }
+
+    public long countNumberGroups() {
+        return groupRepository.count();
+    }
 }

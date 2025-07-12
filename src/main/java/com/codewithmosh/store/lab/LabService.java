@@ -25,4 +25,7 @@ public class LabService {
         return labRepository.findById(id)
                 .map(labMapper::toDto);
     }
+    public long countNumberLabs() {
+        return labRepository.count();
+    }
 }

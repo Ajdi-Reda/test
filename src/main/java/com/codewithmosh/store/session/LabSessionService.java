@@ -26,6 +26,10 @@ public class LabSessionService {
     private final LabRepository labRepository;
     private final UserRepository userRepository;
     private final LabSessionMapper labSessionMapper;
+    public long countNumberLabSessions() {
+        return labSessionRepository.count();
+    }
+
 
     public List<LabSessionDto> findAll() {
         return labSessionRepository.findAll()

@@ -37,4 +37,10 @@ public class GroupController {
         URI location = uriBuilder.path("/groups/{id}").buildAndExpand(createdGroup.getId()).toUri();
         return ResponseEntity.created(location).body(createdGroup);
     }
+
+    @GetMapping("/cnt")
+    public ResponseEntity<Long> getGroupCount() {
+        long count = groupService.countNumberGroups();
+        return ResponseEntity.ok(count);
+    }
 }
