@@ -10,11 +10,13 @@ import java.util.List;
 public class LabSessionDto {
     private Integer id;
     private Integer groupId;
+    private String groupName;
     private Integer labId;
     private Instant scheduledStart;
     private Instant scheduledEnd;
     private Boolean validated;
     private Integer createdBy;
+    private String createdByName;
     private List<EquipmentLoanDto> equipmentLoans;
     private List<UsageDto> chemicalUsages;
 }

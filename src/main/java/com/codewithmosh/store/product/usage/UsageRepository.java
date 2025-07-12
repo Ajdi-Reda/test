@@ -8,4 +8,4 @@ import java.util.List;
 
 public interface UsageRepository extends JpaRepository<ChemicalUsage, Integer> {
     List<ChemicalUsage> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
-}
+    void deleteBySessionId(Integer sessionId);}

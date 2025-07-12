@@ -1,10 +1,13 @@
 package com.codewithmosh.store.session;
 
+import com.codewithmosh.store.equipments.CreateEquipmentLoanRequest;
+import com.codewithmosh.store.product.usage.CreateUsageRequest;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 public class LabSessionCreateRequest {
@@ -28,4 +31,11 @@ public class LabSessionCreateRequest {
     private Integer createdBy;
 
     private Boolean validated = false;
+
+    @NotNull(message = "Product usages are required")
+    private List<CreateUsageRequest> productUsages;
+
+    @NotNull(message = "Equipment loans are required")
+    private List<CreateEquipmentLoanRequest> equipmentLoans;
+
 }

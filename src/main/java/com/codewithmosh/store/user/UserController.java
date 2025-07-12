@@ -18,6 +18,7 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
 
+    @PreAuthorize("hasRole('ADMIN')")
 
     @GetMapping("/cnt")
     public ResponseEntity<Long> getLabCount(){

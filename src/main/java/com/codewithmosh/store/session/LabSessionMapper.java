@@ -16,8 +16,10 @@ import org.mapstruct.MappingTarget;
 
     // For DTO, map nested objects to their IDs
     @Mapping(source = "group.id", target = "groupId")
+    @Mapping(source = "group.name", target = "groupName")
     @Mapping(source = "lab.id", target = "labId")
     @Mapping(source = "createdBy.id", target = "createdBy")
+    @Mapping(source = "createdBy.name", target = "createdByName")
     LabSessionDto toDto(LabSession labSession);
 
     // Update entity, ignoring group, lab, createdBy (handle manually)

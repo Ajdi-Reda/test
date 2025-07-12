@@ -159,6 +159,7 @@ Lab Admin Team
         userRepository.delete(user);
     }
 
+
     public void changePassword(
             @PathVariable Integer id,
             @RequestBody ChangePasswordRequest request) {
@@ -167,11 +168,11 @@ Lab Admin Team
             throw new EntityNotFoundException("User not found");
         }
 
-        if (!user.getPassword().equals(request.getOldPassword())) {
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new AccessDeniedException();
         }
 
-        user.setPassword(request.getNewPassword());
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
 

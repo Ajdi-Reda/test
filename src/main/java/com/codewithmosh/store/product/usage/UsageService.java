@@ -11,6 +11,8 @@
     import lombok.AllArgsConstructor;
     import org.springframework.stereotype.Service;
 
+    import java.util.List;
+
     @Service
     @AllArgsConstructor
     public class UsageService {
@@ -106,6 +108,16 @@
         public void deleteUsage(Integer id) {
             usageRepository.findById(id).orElseThrow(ChemicalUsageNotFoundException::new);
             usageRepository.deleteById(id);
+        }
+
+        public void deleteBySessionId(Integer sessionId) {
+            usageRepository.deleteBySessionId(sessionId);
+        }
+
+        public void createBatchUsages(List<CreateUsageRequest> requests) {
+            for(var request : requests) {
+                createUsage(request);
+            }
         }
 
         private void validateAndHandleStock(ChemicalProduct product, float stockAfterUsage) {

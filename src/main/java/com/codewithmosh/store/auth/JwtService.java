@@ -1,5 +1,6 @@
 package com.codewithmosh.store.auth;
 
+import com.codewithmosh.store.role.Role;
 import com.codewithmosh.store.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -27,13 +28,16 @@ public class JwtService {
                 .subject(user.getId().toString())
                 .add("email", user.getEmail())
                 .add("name", user.getName())
-                .add("roles", user.getRoles())
+                .add("roles", user.getRoles().stream()
+                        .map(Role::getName) // ✅ Only add role names: "ADMIN", "USER", etc.
+                        .toList())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * tokenExpiration))
                 .build();
 
         return new Jwt(claims, jwtConfig.getSecretKey());
     }
+
 
     public Jwt parseToken(String token) {
         try {

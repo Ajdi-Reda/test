@@ -1,10 +1,13 @@
 package com.codewithmosh.store.session;
 
+import com.codewithmosh.store.equipments.CreateEquipmentLoanRequest;
+import com.codewithmosh.store.product.usage.CreateUsageRequest;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 public class LabSessionUpdateRequest {
@@ -27,4 +30,8 @@ public class LabSessionUpdateRequest {
     private Integer createdBy;
 
     private Boolean validated;
+
+    private List<CreateUsageRequest> productUsages;
+
+    private List<CreateEquipmentLoanRequest> equipmentLoans;
 }

@@ -1,12 +1,17 @@
 package com.codewithmosh.store.session;
 
 import com.codewithmosh.store.common.EntityNotFoundException;
+import com.codewithmosh.store.equipments.CreateEquipmentLoanRequest;
+import com.codewithmosh.store.equipments.EquipmentLoanService;
 import com.codewithmosh.store.group.Group;
 import com.codewithmosh.store.group.GroupRepository;
 import com.codewithmosh.store.lab.Lab;
 import com.codewithmosh.store.lab.LabRepository;
+import com.codewithmosh.store.product.usage.CreateUsageRequest;
+import com.codewithmosh.store.product.usage.UsageService;
 import com.codewithmosh.store.user.User;
 import com.codewithmosh.store.user.UserRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +31,8 @@ public class LabSessionService {
     private final LabRepository labRepository;
     private final UserRepository userRepository;
     private final LabSessionMapper labSessionMapper;
+    private final UsageService usageService;
+    private final EquipmentLoanService equipmentLoanService;
     public long countNumberLabSessions() {
         return labSessionRepository.count();
     }
@@ -44,6 +51,7 @@ public class LabSessionService {
         return labSessionMapper.toDto(labSession);
     }
 
+    @Transactional
     public LabSessionDto create(LabSessionCreateRequest request) {
         Group group = null;
         if (request.getGroupId() != null) {
@@ -51,53 +59,92 @@ public class LabSessionService {
                     .orElseThrow(() -> new EntityNotFoundException("Group not found with ID: " + request.getGroupId()));
         }
 
-        // Fetch required Lab
         Lab lab = labRepository.findById(request.getLabId())
                 .orElseThrow(() -> new EntityNotFoundException("Lab not found with ID: " + request.getLabId()));
 
-        // Fetch required User (creator)
         User createdBy = userRepository.findById(request.getCreatedBy())
                 .orElseThrow(() -> new EntityNotFoundException("User (creator) not found with ID: " + request.getCreatedBy()));
 
-        // Ensure session times don't conflict with existing sessions
         validateSessionTime(lab.getId(), request.getScheduledStart(), request.getScheduledEnd(), null);
 
-        // Map request to entity
         LabSession labSession = labSessionMapper.toEntity(request);
         labSession.setGroup(group);
         labSession.setLab(lab);
         labSession.setCreatedBy(createdBy);
 
-        // Persist entity
-        labSessionRepository.save(labSession);
+        labSessionRepository.save(labSession); // Persist first to get ID
+        Integer sessionId = labSession.getId();
 
-        // Return DTO
+        // Attach sessionId to each usage and loan
+        if (request.getProductUsages() != null) {
+            for (CreateUsageRequest usage : request.getProductUsages()) {
+                usage.setSessionId(sessionId);
+            }
+            usageService.createBatchUsages(request.getProductUsages());
+        }
+
+        if (request.getEquipmentLoans() != null) {
+            for (CreateEquipmentLoanRequest loan : request.getEquipmentLoans()) {
+                loan.setSessionId(sessionId);
+            }
+            // Save loans (assuming you have a loanService)
+             equipmentLoanService.createBatchEquipmentLoans(request.getEquipmentLoans());
+        }
+
         return labSessionMapper.toDto(labSession);
     }
 
+
+    @Transactional
     public LabSessionDto update(Integer id, LabSessionUpdateRequest request) {
         LabSession labSession = labSessionRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("LabSession not found"));
+                .orElseThrow(() -> new EntityNotFoundException("LabSession not found with ID: " + id));
 
-        Group group = groupRepository.findById(request.getGroupId())
-                .orElseThrow(() -> new EntityNotFoundException("Group not found"));
+        Group group = null;
+        if (request.getGroupId() != null) {
+            group = groupRepository.findById(request.getGroupId())
+                    .orElseThrow(() -> new EntityNotFoundException("Group not found with ID: " + request.getGroupId()));
+        }
 
         Lab lab = labRepository.findById(request.getLabId())
-                .orElseThrow(() -> new EntityNotFoundException("Lab not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Lab not found with ID: " + request.getLabId()));
 
-        User createdBy = userRepository.findById(request.getGroupId())
-                .orElseThrow(() -> new EntityNotFoundException("User (creator) not found"));
+        User createdBy = userRepository.findById(request.getCreatedBy())
+                .orElseThrow(() -> new EntityNotFoundException("User (creator) not found with ID: " + request.getCreatedBy()));
 
-        // exclude current session id to avoid conflict with itself
+        // Validate time (exclude current session to avoid self-conflict)
         validateSessionTime(lab.getId(), request.getScheduledStart(), request.getScheduledEnd(), id);
 
+        // Update basic fields
         labSessionMapper.update(request, labSession);
-
         labSession.setGroup(group);
         labSession.setLab(lab);
         labSession.setCreatedBy(createdBy);
 
         labSessionRepository.save(labSession);
+
+        Integer sessionId = labSession.getId();
+
+        // 🧽 Delete existing usages and loans
+        usageService.deleteBySessionId(sessionId);
+        equipmentLoanService.deleteBySessionId(sessionId);
+
+        // 🔁 Re-insert new usages
+        if (request.getProductUsages() != null) {
+            for (CreateUsageRequest usage : request.getProductUsages()) {
+                usage.setSessionId(sessionId);
+            }
+            usageService.createBatchUsages(request.getProductUsages());
+        }
+
+        // 🔁 Re-insert new equipment loans
+        if (request.getEquipmentLoans() != null) {
+            for (CreateEquipmentLoanRequest loan : request.getEquipmentLoans()) {
+                loan.setSessionId(sessionId);
+            }
+            equipmentLoanService.createBatchEquipmentLoans(request.getEquipmentLoans());
+        }
+
         return labSessionMapper.toDto(labSession);
     }
 

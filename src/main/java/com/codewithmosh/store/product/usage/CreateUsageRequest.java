@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @Data
 public class CreateUsageRequest {
 
-    @NotNull(message = "Session ID is required")
     private Integer sessionId;
 
     @NotNull(message = "Product ID is required")

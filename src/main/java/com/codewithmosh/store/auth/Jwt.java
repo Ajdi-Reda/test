@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.List;
 
 public class Jwt {
     private final Claims claims;
@@ -14,6 +15,17 @@ public class Jwt {
         this.claims = claims;
         this.secretKey = secretKey;
     }
+
+    public List<String> getRoles() {
+        Object rolesObj = claims.get("roles");
+        if (rolesObj instanceof List<?>) {
+            return ((List<?>) rolesObj).stream()
+                    .map(Object::toString)
+                    .toList();
+        }
+        return List.of();
+    }
+
 
     public boolean isExpired() {
         return claims.getExpiration().before(new Date());

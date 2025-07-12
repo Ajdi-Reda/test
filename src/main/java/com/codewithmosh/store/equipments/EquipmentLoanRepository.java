@@ -12,9 +12,9 @@ import java.util.List;
 
 public interface EquipmentLoanRepository extends JpaRepository<Equipmentloan, Integer> {
     boolean existsByEquipmentIdAndReturnedFalse(Integer equipmentId);
-
     List<Equipmentloan> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
     @Query("SELECT e FROM Equipmentloan e WHERE :time BETWEEN e.reservedFrom AND e.reservedTo AND (e.returned IS NULL OR e.returned = false)")
     List<Equipmentloan> findLoansAtTime(@Param("time") Instant time);
 
+    void deleteBySessionId(Integer sessionId);
 }

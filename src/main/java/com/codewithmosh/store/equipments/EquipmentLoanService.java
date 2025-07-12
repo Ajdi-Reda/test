@@ -1,9 +1,11 @@
 package com.codewithmosh.store.equipments;
 
 import com.codewithmosh.store.user.User;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -63,6 +65,11 @@ public class EquipmentLoanService {
         return equipmentLoanMapper.toDto(loan);
     }
 
+    public void createBatchEquipmentLoans(List<CreateEquipmentLoanRequest> requests) {
+        for(var request : requests) {
+            createEquipmentLoan(request);
+        }
+    }
 
     public void returnEquipment(Integer id, Integer returnedToId) {
         var loan = equipmentLoanRepository.findById(id)
@@ -85,6 +92,10 @@ public class EquipmentLoanService {
         }
 
         equipmentLoanRepository.save(loan);
+    }
+
+    public void deleteBySessionId(Integer sessionId) {
+        equipmentLoanRepository.deleteBySessionId(sessionId);
     }
 
     public void deleteEquipmentLoan(Integer id) {
