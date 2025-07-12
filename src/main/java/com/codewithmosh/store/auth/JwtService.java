@@ -29,7 +29,7 @@ public class JwtService {
                 .add("email", user.getEmail())
                 .add("name", user.getName())
                 .add("roles", user.getRoles().stream()
-                        .map(Role::getName) // ✅ Only add role names: "ADMIN", "USER", etc.
+                        .map(Role::getName) //
                         .toList())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * tokenExpiration))
